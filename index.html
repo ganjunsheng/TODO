@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Template • TodoMVC</title>
+	<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+	<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+	<!-- CSS overrides - remove if you don't need it -->
+	<link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+	<section class="todoapp" id="app" v-cloak>
+		<header class="header">
+			<h1>todos</h1>
+			<!-- 通过双向数据绑定操作实现添加功能 -->
+			<!-- form表单在只有一个input输入框时回车会自动提交表单 -->
+			<form @submit.prevent="addList">
+				<input class="new-todo" placeholder="What needs to be done?" autofocus v-model="newText">
+			</form>
+		</header>
+		<!-- This section should be hidden by default and shown when there are todos -->
+		<section class="main">
+			<!-- 通过v-model双向数据绑定实现全选功能 -->
+			<input id="toggle-all" class="toggle-all" type="checkbox" v-model="toggleAll">
+			<label for="toggle-all">Mark all as complete</label>
+			<ul class="todo-list">
+				<!-- These are here just to show the structure of the list items -->
+				<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+
+				<!-- 使用v-for循环生成数据 -->
+				<li v-for="(v,i) in list" :class="{completed:v.isCompleted,editing:editIndex === i}" v-show="isShow(v)">
+					<div class="view">
+						<!-- 编辑功能 -->
+						<input class="toggle" type="checkbox" v-model="v.isCompleted">
+						<label @dblclick="editIndex = i">{{v.text}}</label>
+						<!-- 实现点击删除功能 -->
+						<button class="destroy" @click="list.splice(i,1)"></button>
+					</div>
+					<!-- 实现双向数据修改内容 -->
+					<form @submit.prevent="editIndex = ''">
+						<input class="edit" value="Create a TodoMVC template" v-model="v.text">
+					</form>
+				</li>
+
+			</ul>
+		</section>
+		<!-- This footer should hidden by default and shown when there are todos -->
+		<footer class="footer">
+			<!-- This should be `0 items left` by default -->
+			<span class="todo-count">
+				<!-- 实现剩余计数 -->
+				<strong>{{list.filter(v=>{return v.isCompleted == false}).length}}</strong> item left</span>
+			<!-- Remove this if you don't implement routing -->
+			<!-- 通过绑定点击事件实现切换功能 -->
+			<ul class="filters">
+				<li>
+					<a :class="{selected:listStatus == 'all'}" @click = "listStatus ='all'" href="#/">All</a>
+				</li>
+				<li>
+					<a :class="{selected:listStatus == 'active'}" @click = "listStatus ='active'"  href="#/active">Active</a>
+				</li>
+				<li>
+					<a href="#/completed" :class="{selected:listStatus == 'Completed'}" @click = "listStatus ='Completed'" >Completed</a>
+				</li>
+			</ul>
+			<!-- Hidden if no completed items are left ↓ -->
+			<!-- 清空完成选项 -->
+			<button class="clear-completed" @click="list = list.filter(v=>{return !v.isCompleted})">Clear completed</button>
+		</footer>
+	</section>
+	<footer class="info">
+		<p>Double-click to edit a todo</p>
+		<!-- Remove the below line ↓ -->
+		<p>Template by
+			<a href="http://sindresorhus.com">Sindre Sorhus</a>
+		</p>
+		<!-- Change this out with your name and url ↓ -->
+		<p>Created by
+			<a href="http://todomvc.com">you</a>
+		</p>
+		<p>Part of
+			<a href="http://todomvc.com">TodoMVC</a>
+		</p>
+	</footer>
+	<!-- Scripts here. Don't remove ↓ -->
+	<!-- <script src="node_modules/todomvc-common/base.js"></script> -->
+	<script src="./js/vue2.js"></script>
+	<script src="js/app.js"></script>
+</body>
+
+</html>
